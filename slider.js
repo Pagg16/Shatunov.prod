@@ -37,6 +37,8 @@ const buttonRight = sliderElement.querySelector(
 
 const buttonLeft = sliderElement.querySelector(".slider-element__button-left");
 
+const wideoDecorWithoutJs = document.querySelector(".without-js");
+
 videoLink.forEach((elem) => {
   coversCheck(parseMediaURL(elem));
 });
@@ -121,6 +123,8 @@ function appendSlider(elem, id) {
 
 function createSliderVideo() {
   if (videoLink.length === sliderItems.length) {
+    wideoDecorWithoutJs.remove();
+
     let focusItem = 0;
     let itemWidth = 0;
     let itemHeight = 0;
@@ -167,8 +171,6 @@ function createSliderVideo() {
 
       sizeMovableElement();
     }
-
-    console.log(window.screen.width);
 
     adjustmentSize();
 
