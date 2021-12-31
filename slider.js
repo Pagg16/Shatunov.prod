@@ -271,30 +271,32 @@ function createSliderVideo() {
       setupVideo(item.imageDiv, item.id);
     });
 
-    function setSizingHeight(item) {
-      if (whenFlipSlider()) {
-        item.imageDiv.height = null;
-        item.imageDiv.style.minHeight = `${itemHeight}px`;
-      } else {
-        item.imageDiv.style.minHeight = null;
-        item.imageDiv.style.height = `${itemHeight}px`;
-      }
-    }
+    // function setSizingHeight(item) {
+    //   if (whenFlipSlider()) {
+    //     item.imageDiv.height = null;
+    //     item.imageDiv.style.minHeight = `${itemHeight}px`;
+    //   } else {
+    //     item.imageDiv.style.minHeight = null;
+    //     item.imageDiv.style.height = `${itemHeight}px`;
+    //   }
+    // }
 
-    function setSizingWidth(item) {
-      if (whenFlipSlider()) {
-        item.imageDiv.style.minWidth = null;
-        item.imageDiv.style.width = `${itemWidth}px`;
-      } else {
-        item.imageDiv.width = null;
-        item.imageDiv.style.minWidth = `${itemWidth}px`;
-      }
-    }
+    // function setSizingWidth(item) {
+    //   if (whenFlipSlider()) {
+    //     item.imageDiv.style.minWidth = null;
+    //     item.imageDiv.style.width = `${itemWidth}px`;
+    //   } else {
+    //     item.imageDiv.width = null;
+    //     item.imageDiv.style.minWidth = `${itemWidth}px`;
+    //   }
+    // }
 
     function resizingItem() {
       noEmpty.forEach((item) => {
-        setSizingWidth(item);
-        setSizingHeight(item);
+        item.imageDiv.width = `${itemWidth}px`;
+        item.imageDiv.style.minWidth = `${itemWidth}px`;
+        item.imageDiv.style.minHeight = `${itemHeight}px`;
+        item.imageDiv.style.height = `${itemHeight}px`;
       });
     }
 
