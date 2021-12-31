@@ -127,6 +127,7 @@
   justify-content: center;
   width: 100%;
   height: 100vh;
+  background: url(./images/maxresdefault.jpg) 0 0 / auto 100% no-repeat blueviolet;
 }
 
 .video {
