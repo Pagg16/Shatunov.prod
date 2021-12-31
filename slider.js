@@ -16,6 +16,8 @@ const videoLink = [
   "",
 ];
 
+const siteSize = 3000;
+
 const sliderItems = [];
 
 const videoQuality = ["maxresdefault", "sddefault", "hqdefault", "mqdefault"];
@@ -126,7 +128,9 @@ function createSliderVideo() {
     const itemsCount = noEmpty.length;
     let resizeTimeout = false;
     let displacementAmount = 0;
+    let moving = 0;
     let position = 0;
+    let travelDirection = 0;
 
     window.addEventListener("resize", () => {
       if (!resizeTimeout) {
@@ -134,7 +138,7 @@ function createSliderVideo() {
         setTimeout(() => {
           adjustmentSize();
           position = 0;
-          slider.style.transform = `translateX(${0}px)`;
+          setPosition();
           noEmpty[focusItem].imageDiv.classList.remove("focus-image");
           noEmpty[1].imageDiv.classList.add("focus-image");
           buttonLeft.disabled = false;
@@ -146,22 +150,57 @@ function createSliderVideo() {
 
     function adjustmentSize() {
       itemWidth = elemWidth();
-      console.log(itemWidth);
-      itemHeight = itemWidth / (16 / 9);
-      sliderElement.style.width = sliderWidth();
+
+      itemHeight = Math.round(itemWidth / (16 / 9));
+
+      sliderWidth();
+
       sliderElement.style.height = sliderHeight();
 
-      console.log(itemWidth * 3);
+      moving = movingPosition();
+
+      travelDirection = directionTravel();
 
       directionDisplacement();
 
       resizingItem();
+
+      sizeMovableElement();
     }
+
+    console.log(window.screen.width);
 
     adjustmentSize();
 
+    function maximumSiteWidth() {
+      if (document.documentElement.clientWidth >= siteSize) {
+        return 3000;
+      } else {
+        return document.documentElement.clientWidth;
+      }
+    }
+
+    function maximumSiteHeight() {
+      if (
+        document.documentElement.clientWidth /
+          document.documentElement.clientHeight <
+        0.6
+      ) {
+        return document.documentElement.clientWidth * 1.7;
+      } else {
+        return document.documentElement.clientHeight;
+      }
+    }
+
+    function whenFlipSlider() {
+      return (
+        document.documentElement.clientWidth <=
+        document.documentElement.clientHeight
+      );
+    }
+
     function directionDisplacement() {
-      if (document.documentElement.clientWidth <= 800) {
+      if (whenFlipSlider()) {
         displacementAmount = Math.round(itemHeight);
       } else {
         displacementAmount = Math.round(itemWidth);
@@ -169,15 +208,15 @@ function createSliderVideo() {
     }
 
     function elemWidth() {
-      if (document.documentElement.clientWidth <= 800) {
-        return (document.documentElement.clientWidth / 100) * 65;
+      if (whenFlipSlider()) {
+        return Math.round((maximumSiteHeight() / 100) * 42);
       } else {
-        return (document.documentElement.clientWidth / 100) * 25;
+        return Math.round((maximumSiteWidth() / 100) * 25);
       }
     }
 
     function sliderHeight() {
-      if (document.documentElement.clientWidth <= 800) {
+      if (whenFlipSlider()) {
         return `${itemWidth * 1.4}px`;
       } else {
         return `${itemHeight * 1.6}px`;
@@ -185,19 +224,46 @@ function createSliderVideo() {
     }
 
     function sliderWidth() {
-      if (document.documentElement.clientWidth <= 800) {
+      sliderElement.style.minWidth = null;
+      sliderElement.style.width = null;
+      if (whenFlipSlider()) {
         if (noEmpty.length > 2) {
-          return `${itemHeight * 3}px`;
+          sliderElement.style.minWidth = `${itemHeight * 3}px`;
         } else {
-          return `${itemHeight * noEmpty.length}px`;
+          sliderElement.style.minWidth = `${itemHeight * noEmpty.length}px`;
         }
       } else {
         if (noEmpty.length > 2) {
-          console.log(itemWidth * 3);
-          return `${itemWidth * 3}px`;
+          sliderElement.style.width = `${itemWidth * 3}px`;
         } else {
-          return `${itemWidth * noEmpty.length}px`;
+          sliderElement.style.width = `${itemWidth * noEmpty.length}px`;
         }
+      }
+    }
+
+    function sizeMovableElement() {
+      if (whenFlipSlider()) {
+        slider.style.width = `${itemWidth * 1.4}px`;
+        slider.style.height = "100%";
+      } else {
+        slider.style.width = `100%`;
+        slider.style.height = "100%";
+      }
+    }
+
+    function movingPosition() {
+      if (whenFlipSlider()) {
+        return `rotate(-90deg)`;
+      } else {
+        return `rotate(0deg)`;
+      }
+    }
+
+    function directionTravel() {
+      if (whenFlipSlider()) {
+        return "Y";
+      } else {
+        return "X";
       }
     }
 
@@ -205,10 +271,20 @@ function createSliderVideo() {
       setupVideo(item.imageDiv, item.id);
     });
 
+    function setSizingHeight(item) {
+      if (whenFlipSlider()) {
+        item.imageDiv.removeAttribute.height = null;
+        item.imageDiv.style.minHeight = `${itemHeight}px`;
+      } else {
+        item.imageDiv.style.minHeight = null;
+        item.imageDiv.style.height = `${itemHeight}px`;
+      }
+    }
+
     function resizingItem() {
       noEmpty.forEach((item) => {
         item.imageDiv.style.minWidth = `${itemWidth}px`;
-        item.imageDiv.style.height = `${itemHeight}px`;
+        setSizingHeight(item);
       });
     }
 
@@ -227,7 +303,7 @@ function createSliderVideo() {
       }
 
       function setPosition() {
-        slider.style.transform = `translateX(${position}px)`;
+        slider.style.transform = `${moving}translate${travelDirection}(${position}px)`;
       }
 
       function checkBtn() {
@@ -244,9 +320,6 @@ function createSliderVideo() {
         } else {
           focusItem = Math.abs(position) / displacementAmount + 1;
         }
-
-        console.log("position" + " " + position);
-        console.log(focusItem);
 
         noEmpty[focusItem].imageDiv.classList.add("focus-image");
 
