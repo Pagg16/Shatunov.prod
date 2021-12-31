@@ -273,7 +273,7 @@ function createSliderVideo() {
 
     function setSizingHeight(item) {
       if (whenFlipSlider()) {
-        item.imageDiv.removeAttribute.height = null;
+        item.imageDiv.height = null;
         item.imageDiv.style.minHeight = `${itemHeight}px`;
       } else {
         item.imageDiv.style.minHeight = null;
@@ -281,9 +281,19 @@ function createSliderVideo() {
       }
     }
 
+    function setSizingWidth(item) {
+      if (whenFlipSlider()) {
+        item.imageDiv.style.minWidth = null;
+        item.imageDiv.style.width = `${itemWidth}px`;
+      } else {
+        item.imageDiv.width = null;
+        item.imageDiv.style.minWidth = `${itemWidth}px`;
+      }
+    }
+
     function resizingItem() {
       noEmpty.forEach((item) => {
-        item.imageDiv.style.minWidth = `${itemWidth}px`;
+        setSizingWidth(item);
         setSizingHeight(item);
       });
     }
