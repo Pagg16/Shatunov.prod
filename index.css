@@ -234,8 +234,12 @@
 }
 
 .image-normal {
-  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
+  object-fit: contain;
 }
 
 .image-block {
@@ -727,7 +731,7 @@
   margin: 0;
   padding: 0px;
   list-style-type: none;
-  grid-template-columns: repeat(auto-fit, minmax(auto-fit, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(auto, 1fr));
   grid-template-rows: auto;
   gap: 14px;
 }
@@ -756,7 +760,7 @@
   opacity: 1;
 }
 
-.footer__column-link:hover {
+.footer__column-element:hover {
   transition: 0.4s;
   opacity: 0.33;
 }
@@ -828,7 +832,5 @@
   right: 0;
   background: #0b8aff;
 }
-
-
 
 /* Footer */
